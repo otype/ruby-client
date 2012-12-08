@@ -19,7 +19,7 @@ With ApitraryClient for ruby you can easily communicate with your apitrary API.
 Installation
 ----------------
 
-Add the following gem to your gem
+Add the following gem to your Gemfile
 
     gem "apitrary-client", :git => "git@github.com:apitrary/ruby-client.git"
 
@@ -31,8 +31,8 @@ Generate a new client, providing the URL of your API and the API key.
 
     client = ApitraryClient.new( "http://YOUR_API_ID.api.apitrary.net", "YOUR_API_KEY" )
 
-Assuming your have created a resource **person** in your API, you would use the following calls to work with
-this resource:
+Assuming your have created an entity **person** in your API, you would use the following calls to work with
+this entity:
 
 ### Add object
 
@@ -64,7 +64,7 @@ Contributing
 
 ### Found a bug?
 
-Please report it at TDB
+Please [file an issue](https://github.com/apitrary/ruby-client/issues).
 
 ### Running the tests
 
