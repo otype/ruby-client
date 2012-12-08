@@ -16,8 +16,8 @@ class ApitraryClient
   headers "User-Agent" => "Ruby Client"
 
   # comment this in to see HTTP request/response output from HTTParty
-  debug_output $stdout
-  format :json
+  # debug_output $stdout
+  # format :json
 
   @private
   LOG = Logger.new(STDOUT)
