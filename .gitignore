@@ -1,0 +1,8 @@
+*.gem
+.yardoc
+.idea
+doc/
+.DS_Store
+
+TODO
+test.rb

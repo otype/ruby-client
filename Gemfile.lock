@@ -1,0 +1,32 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    diff-lcs (1.1.2)
+    fakeweb (1.3.0)
+    httparty (0.8.3)
+      multi_json (~> 1.0)
+      multi_xml
+    json (1.7.4)
+    multi_json (1.3.6)
+    multi_xml (0.5.1)
+    redcarpet (2.1.1)
+    rspec (2.6.0)
+      rspec-core (~> 2.6.0)
+      rspec-expectations (~> 2.6.0)
+      rspec-mocks (~> 2.6.0)
+    rspec-core (2.6.0)
+    rspec-expectations (2.6.0)
+      diff-lcs (~> 1.1.2)
+    rspec-mocks (2.6.0)
+    yard (0.8.2.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  fakeweb
+  httparty
+  json
+  redcarpet
+  rspec
+  yard
