@@ -11,9 +11,6 @@ require "logger"
 
 class ApitraryClient
   include HTTParty
-  headers "Content-Type" => "application/json"
-  headers "Accept" => "application/json"
-  headers "User-Agent" => "Ruby Client"
 
   # comment this in to see HTTP request/response output from HTTParty
   # debug_output $stdout
@@ -27,12 +24,24 @@ class ApitraryClient
   # @param [String] base_uri    Base URL at which your API resides
   # @param [String] api_key     API key of associated to this API
   # @return [ApitraryClient] new instance of ApitraryClient
-  def initialize(base_uri, api_key)
-    ApitraryClient.base_uri(base_uri)
+  def initialize(base_url, api_key)
+    # the base_uri provided by HTTParty is a class variable and
+    # therefore not suitable for the purpose of having multiple 
+    # instances of the ApitraryClient which connect to different
+    # base URLs
+    @my_base_url = base_url
+    # ApitraryClient.base_uri(base_uri)
+    # base_uri(base_uri)
 
     # always send the API key
     # ApitraryClient.default_params(:api_key => api_key)
-    ApitraryClient.headers("X-Api-Key" => api_key)
+    # ApitraryClient.headers("X-Api-Key" => api_key)
+    @my_headers = {
+      "X-Api-Key" => api_key,
+      "Content-Type" => "application/json",
+      "Accept" => "application/json",
+      "User-Agent" => "Ruby Client"
+    }
 
     @status = status()
     # @resources_path = "#{@status["status"]["api"]["api_id"]}/v1"
@@ -44,7 +53,9 @@ class ApitraryClient
   # Status information about the apitrary API that this client is connected to
   # @return [Hash] status information about your API
   def status
-    self.class.get("/")
+    self.class.get(
+      "#{@my_base_url}/", 
+      :headers => @my_headers)
     # response = self.class.get("/")
     # case response.code
     #   when 200
@@ -63,9 +74,10 @@ class ApitraryClient
     raise "Invalid resource" if not valid_resource?(resource)
 
     # https://groups.google.com/forum/?fromgroups=#!topic/httparty-gem/4sA4YxakqSU
-    options = { :body => JSON.dump(object) }
-    LOG.debug "Posting: #{options}"
-    self.class.post("/#{resource}", options)
+    # options = { :body => JSON.dump(object), :headers => @my_headers}
+    self.class.post(
+      "#{@my_base_url}/#{resource}", 
+      :body => JSON.dump(object), :headers => @my_headers)
     # response = self.class.post("/#{resource}", options)
     # case response.code
     #   when 201
@@ -84,9 +96,11 @@ class ApitraryClient
     LOG.debug "update: #{resource}"
     raise "Invalid resource" if not valid_resource?(resource)
 
-    options = { :body => JSON.dump(object) }
-    LOG.debug "Posting: #{options}"
-    self.class.put("/#{resource}/#{id}", options)
+    # options = { :body => JSON.dump(object) }
+    # LOG.debug "Posting: #{options}"
+    self.class.put(
+      "#{@my_base_url}/#{resource}/#{id}",
+      :body => JSON.dump(object), :headers => @my_headers)
     # response = self.class.put("/#{resource}/#{id}", options)
     # case response.code
     #   when 200
@@ -104,7 +118,9 @@ class ApitraryClient
     LOG.debug "get: #{resource}"
     raise "Invalid resource" if not valid_resource?(resource)
 
-    self.class.get("/#{resource}/#{id}")
+    self.class.get(
+      "#{@my_base_url}/#{resource}/#{id}", 
+      :headers => @my_headers)
     # response = self.class.get("/#{resource}/#{id}")
     # case response.code
     #   when 200
@@ -122,7 +138,9 @@ class ApitraryClient
     LOG.debug "delete: #{resource}"
     raise "Invalid resource" if not valid_resource?(resource)
 
-    self.class.delete("/#{resource}/#{id}")
+    self.class.delete(
+      "#{@my_base_url}/#{resource}/#{id}", 
+      :headers => @my_headers)
   end
 
   # Get all objects of type resource
@@ -132,7 +150,9 @@ class ApitraryClient
     LOG.debug "get_all: #{resource}"
     raise "Invalid resource" if not valid_resource?(resource)
 
-    self.class.get("/#{resource}")
+    self.class.get(
+      "#{@my_base_url}/#{resource}", 
+      :headers => @my_headers)
     # response = self.class.get("/#{resource}")
     # case response.code
     #   when 200
@@ -150,9 +170,11 @@ class ApitraryClient
     LOG.debug "search: #{resource}"
     raise "Invalid resource" if not valid_resource?(resource)
 
-    options = { :query => {:q => query_string} }
-    LOG.debug "Searching for: #{options}"
-    self.class.get("/#{resource}", options)
+    # options = { :query => {:q => query_string} }
+    # LOG.debug "Searching for: #{options}"
+    self.class.get(
+      "#{@my_base_url}/#{resource}", 
+      :query => {:q => query_string}, :headers => @my_headers)
     # response = self.class.get("/#{resource}", options)
     # case response.code
     #   when 200
